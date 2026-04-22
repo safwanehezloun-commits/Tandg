@@ -1,361 +1,357 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>بطاقات الحرب الباردة</title>
-  <!-- Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- خط عربي مناسب -->
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    * { font-family: 'Cairo', sans-serif; }
-    body { background: #0b0f19; }
-    .perspective-1000 { perspective: 1000px; }
-    .preserve-3d { transform-style: preserve-3d; }
-    .backface-hidden { backface-visibility: hidden; }
-    .rotate-y-180 { transform: rotateY(180deg); }
-  </style>
-</head>
-<body class="bg-slate-950 text-slate-100">
+```react
+import React, { useState, useEffect } from 'react';
+import { createRoot } from 'react-dom/client';
 
-<div id="root"></div>
+// --- Data Extracted from the Images (Formatted for proper RTL display) ---
+const historyData = [
+  { date: "04-11 فيفري 1945", event: "مؤتمر يالطا بين الو.م.أ - الإتحاد السوفياتي - بريطانيا." },
+  { date: "17 جويلية - 02 أوت 1945", event: "مؤتمر بوتسدام (بريطانيا - السوفيات - الو.م.أ) أقر تقسيم ألمانيا." },
+  { date: "06-09 أوت 1945", event: "تفجير قنبلتي هيروشيما وناغازاكي باليابان." },
+  { date: "24 أكتوبر 1945", event: "تأسيس هيئة الأمم المتحدة." },
+  { date: "12 مارس 1947", event: "الإعلان عن مبدأ هاري ترومان." },
+  { date: "05 جوان 1947", event: "الإعلان عن مشروع جورج مارشال." },
+  { date: "22 سبتمبر 1947", event: "الإعلان عن مبدأ جدانوف." },
+  { date: "06 أكتوبر 1947", event: "إنشاء مكتب الكومنفورم." },
+  { date: "03 جوان 1948", event: "اجتماع لندن وتأسيس حكومة رأسمالية في بون الألمانية." },
+  { date: "23 جوان 1948", event: "حصار السوفيات لبرلين." },
+  { date: "25 جوان 1948", event: "إنشاء جسر جوي إلى برلين وفك الحصار عنها." },
+  { date: "25 جانفي 1949", event: "تأسيس منظمة الكوميكون." },
+  { date: "08 ماي 1949", event: "تأسيس ألمانيا الغربية الرأسمالية الاتحادية عاصمتها بون." },
+  { date: "12 ماي 1949", event: "رفع الحصار عن برلين." },
+  { date: "07 أكتوبر 1949", event: "تأسيس ألمانيا الديمقراطية الشرقية الشيوعية عاصمتها برلين الشرقية." },
+  { date: "04 أفريل 1949", event: "تأسيس حلف الشمال الأطلسي (الناتو)." },
+  { date: "01 أكتوبر 1949", event: "نجاح الثورة الشيوعية الصينية." },
+  { date: "25 جوان 1950", event: "اندلاع الحرب الكورية بغزو القسم الشمالي للجنوب." },
+  { date: "01 سبتمبر 1951", event: "تأسيس حلف الأنزيس." },
+  { date: "05 مارس 1953", event: "وفاة الزعيم السوفياتي ستالين." },
+  { date: "27 جويلية 1953", event: "نهاية الحرب الأهلية الكورية." },
+  { date: "08 سبتمبر 1954", event: "تأسيس حلف جنوب شرق آسيا (السياتو)." },
+  { date: "24 فيفري 1955", event: "تأسيس حلف بغداد." },
+  { date: "18-24 أفريل 1955", event: "مؤتمر باندونغ." },
+  { date: "05 ماي 1955", event: "اعتراف السوفيات بألمانيا الغربية الإتحادية." },
+  { date: "14 ماي 1955", event: "تأسيس حلف وارسو." },
+  { date: "14 فيفري 1956", event: "تبني خروتشوف سياسة التعايش السلمي." },
+  { date: "17 أفريل 1956", event: "حل مكتب الكومنفورم." },
+  { date: "29 أكتوبر 1956", event: "العدوان الثلاثي على مصر." },
+  { date: "05 نوفمبر 1956", event: "تهديد السوفيات باستعمال السلاح النووي ضد دول العدوان الثلاثي." },
+  { date: "05 جانفي 1957", event: "الإعلان عن مشروع أيزنهاور." },
+  { date: "13 أوت 1961", event: "بناء جدار برلين." },
+  { date: "15-18 سبتمبر 1959", event: "زيارة خروتشوف إلى واشنطن." },
+  { date: "01-06 سبتمبر 1961", event: "تأسيس حركة عدم الانحياز ببلغراد بيوغسلافيا." },
+  { date: "07 فيفري 1962", event: "فرض الحصار الاقتصادي الأمريكي على كوبا." },
+  { date: "22 أكتوبر 1962", event: "فرض الحصار العسكري الأمريكي على كوبا." },
+  { date: "28 أكتوبر 1962", event: "قرار سحب السوفيات للصواريخ من كوبا ونهاية الأزمة الكوبية." },
+  { date: "20 جوان 1963", event: "إنشاء الخط الهاتفي الأحمر." },
+  { date: "26 ماي 1972", event: "توقيع اتفاقية سالت الأولى للحد من الأسلحة الإستراتيجية." },
+  { date: "05-09 سبتمبر 1973", event: "المؤتمر الرابع لحركة عدم الانحياز بالجزائر." },
+  { date: "18 جوان 1979", event: "توقيع اتفاقية سالت الثانية بفيينا." },
+  { date: "27 ديسمبر 1979", event: "تدخل السوفيات عسكريا في أفغانستان." },
+  { date: "03-04 ديسمبر 1989", event: "مؤتمر مالطا بين غورباتشوف وجورج بوش والإعلان عن زوال القطبية الثنائية." },
+  { date: "09 نوفمبر 1989", event: "تحطيم جدار برلين." },
+  { date: "03 أكتوبر 1990", event: "توحيد الألمانيتين." },
+  { date: "19-21 نوفمبر 1990", event: "مؤتمر باريس وإعلان نهاية الحرب الباردة رسميا." },
+  { date: "28 جوان 1991", event: "حل منظمة الكوميكون." },
+  { date: "01 جويلية 1991", event: "حل حلف وارسو." },
+  { date: "05 سبتمبر 1991", event: "حل الحزب الشيوعي السوفياتي." },
+  { date: "21 ديسمبر 1991", event: "مؤتمر 'ألما آتا' وزوال الإتحاد السوفياتي وظهور الجمهوريات المستقلة." },
+  { date: "25 ديسمبر 1991", event: "استقالة غورباتشوف من رئاسة الإتحاد السوفياتي." }
+];
 
-<!-- React + Babel -->
-<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+export default function App() {
+  const [activeTab, setActiveTab] = useState('flashcards');
 
-<script type="text/babel">
-  const { useState, useEffect } = React;
+  return (
+    <div dir="rtl" className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-blue-500/30">
+      {/* Required CSS for 3D Flip Effects */}
+      <style dangerouslySetInnerHTML={{__html: `
+        .perspective-1000 { perspective: 1000px; }
+        .preserve-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+      `}} />
 
-  // --- البيانات مع تعديل تنسيق التواريخ (يوم شهر سنة) ---
-  const historyData = [
-    { date: "4 - 11 فيفري 1945", event: "مؤتمر يالطا بين الو.م.أ - الإتحاد السوفياتي - بريطانيا." },
-    { date: "17 جويلية - 2 أوت 1945", event: "مؤتمر بوتسدام (بريطانيا - السوفيات - الو.م.أ) أقر تقسيم ألمانيا." },
-    { date: "6 - 9 أوت 1945", event: "تفجير قنبلتي هيروشيما وناغازاكي باليابان." },
-    { date: "24 أكتوبر 1945", event: "تأسيس هيئة الأمم المتحدة." },
-    { date: "12 مارس 1947", event: "الإعلان عن مبدأ هاري ترومان." },
-    { date: "5 جوان 1947", event: "الإعلان عن مشروع جورج مارشال." },
-    { date: "22 سبتمبر 1947", event: "الإعلان عن مبدأ جدانوف." },
-    { date: "6 أكتوبر 1947", event: "إنشاء مكتب الكومنفورم." },
-    { date: "3 جوان 1948", event: "اجتماع لندن وتأسيس حكومة رأسمالية في بون الألمانية." },
-    { date: "23 جوان 1948", event: "حصار السوفيات لبرلين." },
-    { date: "25 جوان 1948", event: "إنشاء جسر جوي إلى برلين وفك الحصار عنها." },
-    { date: "25 جانفي 1949", event: "تأسيس منظمة الكوميكون." },
-    { date: "8 ماي 1949", event: "تأسيس ألمانيا الغربية الرأسمالية الاتحادية عاصمتها بون." },
-    { date: "12 ماي 1949", event: "رفع الحصار عن برلين." },
-    { date: "7 أكتوبر 1949", event: "تأسيس ألمانيا الديمقراطية الشرقية الشيوعية عاصمتها برلين الشرقية." },
-    { date: "4 أفريل 1949", event: "تأسيس حلف الشمال الأطلسي (الناتو)." },
-    { date: "1 أكتوبر 1949", event: "نجاح الثورة الشيوعية الصينية." },
-    { date: "25 جوان 1950", event: "اندلاع الحرب الكورية بغزو القسم الشمالي للجنوب." },
-    { date: "1 سبتمبر 1951", event: "تأسيس حلف الأنزيس." },
-    { date: "5 مارس 1953", event: "وفاة الزعيم السوفياتي ستالين." },
-    { date: "27 جويلية 1953", event: "نهاية الحرب الأهلية الكورية." },
-    { date: "8 سبتمبر 1954", event: "تأسيس حلف جنوب شرق آسيا (السياتو)." },
-    { date: "24 فيفري 1955", event: "تأسيس حلف بغداد." },
-    { date: "18 - 24 أفريل 1955", event: "مؤتمر باندونغ." },
-    { date: "5 ماي 1955", event: "اعتراف السوفيات بألمانيا الغربية الإتحادية." },
-    { date: "14 ماي 1955", event: "تأسيس حلف وارسو." },
-    { date: "14 فيفري 1956", event: "تبني خروتشوف سياسة التعايش السلمي." },
-    { date: "17 أفريل 1956", event: "حل مكتب الكومنفورم." },
-    { date: "29 أكتوبر 1956", event: "العدوان الثلاثي على مصر." },
-    { date: "5 نوفمبر 1956", event: "تهديد السوفيات باستعمال السلاح النووي ضد دول العدوان الثلاثي." },
-    { date: "5 جانفي 1957", event: "الإعلان عن مشروع أيزنهاور." },
-    { date: "13 أوت 1961", event: "بناء جدار برلين." },
-    { date: "15 - 18 سبتمبر 1959", event: "زيارة خروتشوف إلى واشنطن." },
-    { date: "1 - 6 سبتمبر 1961", event: "تأسيس حركة عدم الانحياز ببلغراد بيوغسلافيا." },
-    { date: "7 فيفري 1962", event: "فرض الحصار الاقتصادي الأمريكي على كوبا." },
-    { date: "22 أكتوبر 1962", event: "فرض الحصار العسكري الأمريكي على كوبا." },
-    { date: "28 أكتوبر 1962", event: "قرار سحب السوفيات للصواريخ من كوبا ونهاية الأزمة الكوبية." },
-    { date: "20 جوان 1963", event: "إنشاء الخط الهاتفي الأحمر." },
-    { date: "26 ماي 1972", event: "توقيع اتفاقية سالت الأولى للحد من الأسلحة الإستراتيجية." },
-    { date: "5 - 9 سبتمبر 1973", event: "المؤتمر الرابع لحركة عدم الانحياز بالجزائر." },
-    { date: "18 جوان 1979", event: "توقيع اتفاقية سالت الثانية بفيينا." },
-    { date: "27 ديسمبر 1979", event: "تدخل السوفيات عسكريا في أفغانستان." },
-    { date: "3 - 4 ديسمبر 1989", event: "مؤتمر مالطا بين غورباتشوف وجورج بوش والإعلان عن زوال القطبية الثنائية." },
-    { date: "9 نوفمبر 1989", event: "تحطيم جدار برلين." },
-    { date: "3 أكتوبر 1990", event: "توحيد الألمانيتين." },
-    { date: "19 - 21 نوفمبر 1990", event: "مؤتمر باريس وإعلان نهاية الحرب الباردة رسميا." },
-    { date: "28 جوان 1991", event: "حل منظمة الكوميكون." },
-    { date: "1 جويلية 1991", event: "حل حلف وارسو." },
-    { date: "5 سبتمبر 1991", event: "حل الحزب الشيوعي السوفياتي." },
-    { date: "21 ديسمبر 1991", event: "مؤتمر 'ألما آتا' وزوال الإتحاد السوفياتي وظهور الجمهوريات المستقلة." },
-    { date: "25 ديسمبر 1991", event: "استقالة غورباتشوف من رئاسة الإتحاد السوفياتي." }
-  ];
-
-  function App() {
-    const [activeTab, setActiveTab] = useState('flashcards');
-
-    return (
-      <div dir="rtl" className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-blue-500/30">
-        {/* شريط التنقل بدون عنوان */}
-        <nav className="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
-          <div className="max-w-4xl mx-auto px-4">
-            <div className="flex justify-center items-center h-16">
-              {/* تم إزالة العنوان بالكامل */}
-              <div className="flex space-x-2 space-x-reverse">
-                <button
-                  onClick={() => setActiveTab('flashcards')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                    activeTab === 'flashcards'
-                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20'
-                      : 'text-slate-400 hover:text-white hover:bg-slate-800'
-                  }`}
-                >
-                  البطاقات
-                </button>
-                <button
-                  onClick={() => setActiveTab('quiz')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                    activeTab === 'quiz'
-                      ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/20'
-                      : 'text-slate-400 hover:text-white hover:bg-slate-800'
-                  }`}
-                >
-                  اختبر معارفك
-                </button>
-              </div>
+      {/* Navbar without the title */}
+      <nav className="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="flex justify-center items-center h-16">
+            <div className="flex space-x-2 space-x-reverse bg-slate-800 p-1 rounded-lg">
+              <button
+                onClick={() => setActiveTab('flashcards')}
+                className={`px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 ${
+                  activeTab === 'flashcards'
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-700'
+                }`}
+              >
+                البطاقات
+              </button>
+              <button
+                onClick={() => setActiveTab('quiz')}
+                className={`px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 ${
+                  activeTab === 'quiz'
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-700'
+                }`}
+              >
+                اختبر معارفك
+              </button>
             </div>
           </div>
-        </nav>
+        </div>
+      </nav>
 
-        <main className="max-w-4xl mx-auto p-4 py-8">
-          {activeTab === 'flashcards' ? <FlashcardsView /> : <QuizView />}
-        </main>
-      </div>
-    );
-  }
+      {/* Main Content */}
+      <main className="max-w-4xl mx-auto p-4 py-8">
+        {activeTab === 'flashcards' ? <FlashcardsView /> : <QuizView />}
+      </main>
+    </div>
+  );
+}
 
-  function FlashcardsView() {
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [isFlipped, setIsFlipped] = useState(false);
+// --- Flashcards Component ---
+function FlashcardsView() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isFlipped, setIsFlipped] = useState(false);
 
-    useEffect(() => {
-      setIsFlipped(false);
-    }, [currentIndex]);
+  // Reset flip state when card changes
+  useEffect(() => {
+    setIsFlipped(false);
+  }, [currentIndex]);
 
-    const handleNext = () => {
-      if (currentIndex < historyData.length - 1) {
-        setCurrentIndex(prev => prev + 1);
-      }
-    };
+  const handleNext = () => {
+    if (currentIndex < historyData.length - 1) {
+      setCurrentIndex(prev => prev + 1);
+    }
+  };
 
-    const handlePrev = () => {
-      if (currentIndex > 0) {
-        setCurrentIndex(prev => prev - 1);
-      }
-    };
+  const handlePrev = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(prev => prev - 1);
+    }
+  };
 
-    const shuffleCards = () => {
+  const shuffleCards = () => {
       historyData.sort(() => Math.random() - 0.5);
       setCurrentIndex(0);
       setIsFlipped(false);
-    };
+  };
 
-    return (
-      <div className="flex flex-col items-center w-full max-w-2xl mx-auto">
-        <div className="w-full flex justify-between items-center mb-6 text-slate-400">
-          <span className="text-sm font-medium bg-slate-800 px-3 py-1 rounded-full">
-            بطاقة {currentIndex + 1} من {historyData.length}
-          </span>
-          <button onClick={shuffleCards} className="text-sm hover:text-blue-400 transition-colors flex items-center gap-2">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-            خلط البطاقات
-          </button>
-        </div>
+  return (
+    <div className="flex flex-col items-center w-full max-w-2xl mx-auto">
+      <div className="w-full flex justify-between items-center mb-6 text-slate-400">
+        <span className="text-sm font-medium bg-slate-800 px-3 py-1 rounded-full">
+          بطاقة {currentIndex + 1} من {historyData.length}
+        </span>
+        <button onClick={shuffleCards} className="text-sm hover:text-blue-400 transition-colors flex items-center gap-2">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+          خلط البطاقات
+        </button>
+      </div>
 
-        <div 
-          className="relative w-full h-80 perspective-1000 cursor-pointer group"
-          onClick={() => setIsFlipped(!isFlipped)}
-        >
-          <div className={`w-full h-full duration-500 preserve-3d relative transition-transform ${isFlipped ? 'rotate-y-180' : ''}`}>
-            <div className="absolute w-full h-full backface-hidden bg-slate-800 rounded-2xl shadow-xl border border-slate-700/50 flex flex-col items-center justify-center p-8 text-center hover:border-blue-500/30 transition-colors">
-              <span className="text-blue-400 mb-4 font-semibold text-sm tracking-wider">التاريخ</span>
-              <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight" dir="ltr">
-                {historyData[currentIndex].date}
-              </h2>
-              <div className="absolute bottom-6 text-slate-500 text-sm animate-pulse">
-                انقر لقلب البطاقة
-              </div>
-            </div>
-
-            <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-gradient-to-br from-blue-900 to-slate-900 rounded-2xl shadow-xl border border-blue-800/50 flex flex-col items-center justify-center p-8 text-center">
-              <span className="text-emerald-400 mb-4 font-semibold text-sm tracking-wider">الحدث</span>
-              <p className="text-2xl md:text-3xl font-medium text-white leading-relaxed">
-                {historyData[currentIndex].event}
-              </p>
+      {/* Flashcard */}
+      <div 
+        className="relative w-full h-80 perspective-1000 cursor-pointer group"
+        onClick={() => setIsFlipped(!isFlipped)}
+      >
+        <div className={`w-full h-full duration-500 preserve-3d relative transition-transform ${isFlipped ? 'rotate-y-180' : ''}`}>
+          
+          {/* Front of card (Date) */}
+          <div className="absolute w-full h-full backface-hidden bg-slate-800 rounded-2xl shadow-xl border border-slate-700/50 flex flex-col items-center justify-center p-8 text-center hover:border-blue-500/30 transition-colors">
+            <span className="text-blue-400 mb-4 font-semibold text-sm tracking-wider">التاريخ</span>
+            {/* Removed dir="ltr" to fix Arabic text flow */}
+            <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">
+              {historyData[currentIndex].date}
+            </h2>
+            <div className="absolute bottom-6 text-slate-500 text-sm animate-pulse">
+              انقر لقلب البطاقة
             </div>
           </div>
-        </div>
 
-        <div className="flex gap-4 mt-10 w-full">
-          <button
-            onClick={handleNext}
-            disabled={currentIndex === historyData.length - 1}
-            className="flex-1 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed text-white py-4 rounded-xl font-medium transition-all flex justify-center items-center gap-2 border border-slate-700"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
-            التالي
-          </button>
-          <button
-            onClick={handlePrev}
-            disabled={currentIndex === 0}
-            className="flex-1 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed text-white py-4 rounded-xl font-medium transition-all flex justify-center items-center gap-2 border border-slate-700"
-          >
-            السابق
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
-          </button>
+          {/* Back of card (Event) */}
+          <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-gradient-to-br from-blue-900 to-slate-900 rounded-2xl shadow-xl border border-blue-800/50 flex flex-col items-center justify-center p-8 text-center">
+            <span className="text-emerald-400 mb-4 font-semibold text-sm tracking-wider">الحدث</span>
+            <p className="text-2xl md:text-3xl font-medium text-white leading-relaxed">
+              {historyData[currentIndex].event}
+            </p>
+          </div>
+
         </div>
       </div>
-    );
-  }
 
-  function QuizView() {
-    const [questions, setQuestions] = useState([]);
-    const [currentQIndex, setCurrentQIndex] = useState(0);
-    const [score, setScore] = useState(0);
-    const [showResult, setShowResult] = useState(false);
-    const [selectedAnswer, setSelectedAnswer] = useState(null);
-    const [isAnswering, setIsAnswering] = useState(false);
+      {/* Controls */}
+      <div className="flex gap-4 mt-10 w-full">
+        <button
+          onClick={handleNext}
+          disabled={currentIndex === historyData.length - 1}
+          className="flex-1 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed text-white py-4 rounded-xl font-medium transition-all flex justify-center items-center gap-2 border border-slate-700"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+          التالي
+        </button>
+        <button
+          onClick={handlePrev}
+          disabled={currentIndex === 0}
+          className="flex-1 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed text-white py-4 rounded-xl font-medium transition-all flex justify-center items-center gap-2 border border-slate-700"
+        >
+          السابق
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+      </div>
+    </div>
+  );
+}
 
-    const startQuiz = () => {
-      const shuffledData = [...historyData].sort(() => 0.5 - Math.random());
-      const selected = shuffledData.slice(0, 10);
-      
-      const generatedQuestions = selected.map(correctItem => {
-        const wrongAnswers = historyData
-          .filter(item => item.date !== correctItem.date)
-          .sort(() => 0.5 - Math.random())
-          .slice(0, 3);
-          
-        const options = [correctItem, ...wrongAnswers].sort(() => 0.5 - Math.random());
+// --- Quiz Component ---
+function QuizView() {
+  const [questions, setQuestions] = useState([]);
+  const [currentQIndex, setCurrentQIndex] = useState(0);
+  const [score, setScore] = useState(0);
+  const [showResult, setShowResult] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [isAnswering, setIsAnswering] = useState(false);
+
+  // Generate 10 random questions
+  const startQuiz = () => {
+    const shuffledData = [...historyData].sort(() => 0.5 - Math.random());
+    const selected = shuffledData.slice(0, 10);
+    
+    const generatedQuestions = selected.map(correctItem => {
+      const wrongAnswers = historyData
+        .filter(item => item.date !== correctItem.date)
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 3);
         
-        return {
-          question: correctItem.event,
-          correctDate: correctItem.date,
-          options: options.map(opt => opt.date)
-        };
-      });
-
-      setQuestions(generatedQuestions);
-      setCurrentQIndex(0);
-      setScore(0);
-      setShowResult(false);
-      setSelectedAnswer(null);
-      setIsAnswering(false);
-    };
-
-    useEffect(() => {
-      startQuiz();
-    }, []);
-
-    const handleAnswer = (selectedDate) => {
-      if (isAnswering) return;
+      const options = [correctItem, ...wrongAnswers].sort(() => 0.5 - Math.random());
       
-      setIsAnswering(true);
-      setSelectedAnswer(selectedDate);
-      
-      const isCorrect = selectedDate === questions[currentQIndex].correctDate;
-      if (isCorrect) {
-        setScore(prev => prev + 1);
-      }
+      return {
+        question: correctItem.event,
+        correctDate: correctItem.date,
+        options: options.map(opt => opt.date)
+      };
+    });
 
-      setTimeout(() => {
-        if (currentQIndex + 1 < questions.length) {
-          setCurrentQIndex(prev => prev + 1);
-          setSelectedAnswer(null);
-          setIsAnswering(false);
-        } else {
-          setShowResult(true);
-        }
-      }, 1500);
-    };
+    setQuestions(generatedQuestions);
+    setCurrentQIndex(0);
+    setScore(0);
+    setShowResult(false);
+    setSelectedAnswer(null);
+    setIsAnswering(false);
+  };
 
-    if (questions.length === 0) return <div className="text-center text-white">جاري التحضير...</div>;
+  useEffect(() => {
+    startQuiz();
+  }, []);
 
-    if (showResult) {
-      const percentage = (score / questions.length) * 100;
-      let message = "يحتاج إلى مراجعة أكثر";
-      let colorClass = "text-red-400";
-      if (percentage >= 80) { message = "ممتاز! أنت مستعد للبكالوريا"; colorClass = "text-emerald-400"; }
-      else if (percentage >= 50) { message = "جيد، لكنك تحتاج للمزيد من التركيز"; colorClass = "text-yellow-400"; }
-
-      return (
-        <div className="max-w-xl mx-auto bg-slate-800 rounded-3xl p-8 shadow-2xl border border-slate-700 text-center animate-in fade-in zoom-in duration-500">
-          <h2 className="text-3xl font-bold text-white mb-2">نتيجة الاختبار</h2>
-          <div className="text-7xl font-black mb-4 mt-6">
-            <span className={colorClass}>{score}</span>
-            <span className="text-slate-500 text-4xl">/{questions.length}</span>
-          </div>
-          <p className={`text-xl font-medium mb-8 ${colorClass}`}>{message}</p>
-          <button 
-            onClick={startQuiz}
-            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-colors shadow-lg shadow-blue-900/20"
-          >
-            إعادة الاختبار
-          </button>
-        </div>
-      );
+  const handleAnswer = (selectedDate) => {
+    if (isAnswering) return;
+    
+    setIsAnswering(true);
+    setSelectedAnswer(selectedDate);
+    
+    const isCorrect = selectedDate === questions[currentQIndex].correctDate;
+    if (isCorrect) {
+      setScore(prev => prev + 1);
     }
 
-    const currentQ = questions[currentQIndex];
+    setTimeout(() => {
+      if (currentQIndex + 1 < questions.length) {
+        setCurrentQIndex(prev => prev + 1);
+        setSelectedAnswer(null);
+        setIsAnswering(false);
+      } else {
+        setShowResult(true);
+      }
+    }, 1500);
+  };
+
+  if (questions.length === 0) return <div className="text-center text-white mt-10">جاري التحضير...</div>;
+
+  if (showResult) {
+    const percentage = (score / questions.length) * 100;
+    let message = "يحتاج إلى مراجعة أكثر";
+    let colorClass = "text-red-400";
+    if (percentage >= 80) { message = "ممتاز! أنت مستعد للبكالوريا"; colorClass = "text-emerald-400"; }
+    else if (percentage >= 50) { message = "جيد، لكنك تحتاج للمزيد من التركيز"; colorClass = "text-yellow-400"; }
 
     return (
-      <div className="max-w-3xl mx-auto">
-        <div className="mb-8">
-          <div className="flex justify-between text-sm font-medium text-slate-400 mb-2">
-            <span>السؤال {currentQIndex + 1} من {questions.length}</span>
-            <span>النقاط: {score}</span>
-          </div>
-          <div className="w-full bg-slate-800 rounded-full h-2.5">
-            <div 
-              className="bg-blue-500 h-2.5 rounded-full transition-all duration-500" 
-              style={{ width: `${((currentQIndex + 1) / questions.length) * 100}%` }}
-            ></div>
-          </div>
+      <div className="max-w-xl mx-auto bg-slate-800 rounded-3xl p-8 shadow-2xl border border-slate-700 text-center animate-in fade-in zoom-in duration-500">
+        <h2 className="text-3xl font-bold text-white mb-2">نتيجة الاختبار</h2>
+        <div className="text-7xl font-black mb-4 mt-6">
+          <span className={colorClass}>{score}</span>
+          <span className="text-slate-500 text-4xl">/{questions.length}</span>
         </div>
-
-        <div className="bg-slate-800 rounded-3xl p-6 md:p-10 shadow-xl border border-slate-700 mb-6">
-          <span className="text-emerald-400 font-semibold text-sm mb-4 block">متى وقع هذا الحدث؟</span>
-          <h2 className="text-2xl md:text-3xl font-bold text-white leading-relaxed">
-            {currentQ.question}
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {currentQ.options.map((optionDate, idx) => {
-            let btnStyle = "bg-slate-800 border-slate-700 hover:bg-slate-700 text-slate-200 hover:border-slate-500";
-            
-            if (isAnswering) {
-              if (optionDate === currentQ.correctDate) {
-                btnStyle = "bg-emerald-900/50 border-emerald-500 text-emerald-400";
-              } else if (optionDate === selectedAnswer) {
-                btnStyle = "bg-red-900/50 border-red-500 text-red-400";
-              } else {
-                btnStyle = "bg-slate-800 border-slate-800 text-slate-500 opacity-50";
-              }
-            }
-
-            return (
-              <button
-                key={idx}
-                onClick={() => handleAnswer(optionDate)}
-                disabled={isAnswering}
-                dir="ltr"
-                className={`p-5 rounded-2xl border-2 text-lg font-bold transition-all duration-300 text-center shadow-sm ${btnStyle}`}
-              >
-                {optionDate}
-              </button>
-            );
-          })}
-        </div>
+        <p className={`text-xl font-medium mb-8 ${colorClass}`}>{message}</p>
+        <button 
+          onClick={startQuiz}
+          className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-colors shadow-lg shadow-blue-900/20"
+        >
+          إعادة الاختبار
+        </button>
       </div>
     );
   }
 
-  const root = ReactDOM.createRoot(document.getElementById('root'));
-  root.render(<App />);
-</script>
-</body>
-</html> 
+  const currentQ = questions[currentQIndex];
+
+  return (
+    <div className="max-w-3xl mx-auto">
+      {/* Progress Bar */}
+      <div className="mb-8">
+        <div className="flex justify-between text-sm font-medium text-slate-400 mb-2">
+          <span>السؤال {currentQIndex + 1} من {questions.length}</span>
+          <span>النقاط: {score}</span>
+        </div>
+        <div className="w-full bg-slate-800 rounded-full h-2.5">
+          <div 
+            className="bg-blue-500 h-2.5 rounded-full transition-all duration-500" 
+            style={{ width: `${((currentQIndex + 1) / questions.length) * 100}%` }}
+          ></div>
+        </div>
+      </div>
+
+      {/* Question Card */}
+      <div className="bg-slate-800 rounded-3xl p-6 md:p-10 shadow-xl border border-slate-700 mb-6">
+        <span className="text-emerald-400 font-semibold text-sm mb-4 block">متى وقع هذا الحدث؟</span>
+        <h2 className="text-2xl md:text-3xl font-bold text-white leading-relaxed">
+          {currentQ.question}
+        </h2>
+      </div>
+
+      {/* Options Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {currentQ.options.map((optionDate, idx) => {
+          
+          let btnStyle = "bg-slate-800 border-slate-700 hover:bg-slate-700 text-slate-200 hover:border-slate-500";
+          
+          if (isAnswering) {
+            if (optionDate === currentQ.correctDate) {
+              btnStyle = "bg-emerald-900/50 border-emerald-500 text-emerald-400";
+            } else if (optionDate === selectedAnswer) {
+              btnStyle = "bg-red-900/50 border-red-500 text-red-400";
+            } else {
+              btnStyle = "bg-slate-800 border-slate-800 text-slate-500 opacity-50";
+            }
+          }
+
+          return (
+            <button
+              key={idx}
+              onClick={() => handleAnswer(optionDate)}
+              disabled={isAnswering}
+              // Removed dir="ltr" to fix Arabic text flow
+              className={`p-5 rounded-2xl border-2 text-lg font-bold transition-all duration-300 text-center shadow-sm ${btnStyle}`}
+            >
+              {optionDate}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+
+```
+ 
