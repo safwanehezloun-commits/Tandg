@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مراجعة الحرب الباردة – بطاقات واختبار</title>
+  <title>مراجعة الحرب الباردة – بطاقات واختبارات</title>
   <!-- Tailwind CSS (RTL ready) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- React & ReactDOM & Babel -->
@@ -11,23 +11,22 @@
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
-    /* 自定义3D翻转及隐藏滚动条样式 — 与原React组件完全一致 */
+    /* أنماط مخصصة للتأثير ثلاثي الأبعاد وإخفاء شريط التمرير — مطابقة تماماً للمكون الأصلي */
     .perspective-1000 { perspective: 1000px; }
     .preserve-3d { transform-style: preserve-3d; }
     .backface-hidden { backface-visibility: hidden; }
     .rotate-y-180 { transform: rotateY(180deg); }
     .scrollbar-hide::-webkit-scrollbar { display: none; }
     .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-    /* 简单微调，保证动画顺滑 */
     .transition-transform { transition: transform 0.5s; }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans selection:bg-blue-500/30 antialiased">
   <div id="root"></div>
 
-  <!-- 应用代码：完全未作任何改动，仅包装为可执行脚本 -->
+  <!-- الكود بالكامل مع إضافة صفحة الاختبار العكسي (التاريخ ← الحدث) -->
   <script type="text/babel">
-    // --- 原始数据 (从图片中提取，格式专为RTL显示) ---
+    // --- البيانات الأصلية (مستخرجة من الصور، منسقة للعرض بالعربية) ---
     const historyData = [
       { date: "04-11 فيفري 1945", event: "مؤتمر يالطا بين الو.م.أ - الإتحاد السوفياتي - بريطانيا." },
       { date: "17 جويلية - 02 أوت 1945", event: "مؤتمر بوتسدام (بريطانيا - السوفيات - الو.م.أ) أقر تقسيم ألمانيا." },
@@ -82,13 +81,13 @@
       { date: "25 ديسمبر 1991", event: "استقالة غورباتشوف من رئاسة الإتحاد السوفياتي." }
     ];
 
-    // --- 主应用组件 (完全未改) ---
+    // --- المكون الرئيسي (تم إضافة التبويب الثالث "اختبار التاريخ") ---
     function App() {
       const [activeTab, setActiveTab] = React.useState('flashcards');
 
       return (
         <div dir="rtl" className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-blue-500/30">
-          {/* 导航栏 — 无标题，与原版相同 */}
+          {/* شريط التنقل — مع ثلاثة أزرار */}
           <nav className="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
             <div className="max-w-4xl mx-auto px-4">
               <div className="flex justify-center items-center h-16">
@@ -111,7 +110,17 @@
                         : 'text-slate-400 hover:text-white hover:bg-slate-700'
                     }`}
                   >
-                    اختبر معارفك
+                    اختر الحدث
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('reverseQuiz')}
+                    className={`px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 ${
+                      activeTab === 'reverseQuiz'
+                        ? 'bg-purple-600 text-white shadow-md'
+                        : 'text-slate-400 hover:text-white hover:bg-slate-700'
+                    }`}
+                  >
+                    اختر التاريخ
                   </button>
                 </div>
               </div>
@@ -119,13 +128,15 @@
           </nav>
 
           <main className="max-w-4xl mx-auto p-4 py-8">
-            {activeTab === 'flashcards' ? <FlashcardsView /> : <QuizView />}
+            {activeTab === 'flashcards' && <FlashcardsView />}
+            {activeTab === 'quiz' && <QuizView />}
+            {activeTab === 'reverseQuiz' && <ReverseQuizView />}
           </main>
         </div>
       );
     }
 
-    // --- 闪卡组件 (FlashcardsView) ---
+    // --- مكون البطاقات التعليمية (بدون تغيير) ---
     function FlashcardsView() {
       const [currentIndex, setCurrentIndex] = React.useState(0);
       const [isFlipped, setIsFlipped] = React.useState(false);
@@ -147,7 +158,6 @@
       };
 
       const shuffleCards = () => {
-          // 注意：原代码直接修改原数组，此处完全保留，不作改动
           historyData.sort(() => Math.random() - 0.5);
           setCurrentIndex(0);
           setIsFlipped(false);
@@ -165,14 +175,12 @@
             </button>
           </div>
 
-          {/* 卡片容器 */}
           <div 
             className="relative w-full h-80 perspective-1000 cursor-pointer group"
             onClick={() => setIsFlipped(!isFlipped)}
           >
             <div className={`w-full h-full duration-500 preserve-3d relative transition-transform ${isFlipped ? 'rotate-y-180' : ''}`}>
               
-              {/* 正面：日期 */}
               <div className="absolute w-full h-full backface-hidden bg-slate-800 rounded-2xl shadow-xl border border-slate-700/50 flex flex-col items-center justify-center p-8 text-center hover:border-blue-500/30 transition-colors">
                 <span className="text-blue-400 mb-4 font-semibold text-sm tracking-wider">التاريخ</span>
                 <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">
@@ -183,7 +191,6 @@
                 </div>
               </div>
 
-              {/* 背面：事件 */}
               <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-gradient-to-br from-blue-900 to-slate-900 rounded-2xl shadow-xl border border-blue-800/50 flex flex-col items-center justify-center p-8 text-center">
                 <span className="text-emerald-400 mb-4 font-semibold text-sm tracking-wider">الحدث</span>
                 <p className="text-2xl md:text-3xl font-medium text-white leading-relaxed">
@@ -193,7 +200,6 @@
             </div>
           </div>
 
-          {/* 导航按钮 */}
           <div className="flex gap-4 mt-10 w-full">
             <button
               onClick={handleNext}
@@ -216,7 +222,7 @@
       );
     }
 
-    // --- 测验组件 (QuizView) ---
+    // --- مكون الاختبار الأصلي (حدث ← تاريخ) بدون تغيير ---
     function QuizView() {
       const [questions, setQuestions] = React.useState([]);
       const [currentQIndex, setCurrentQIndex] = React.useState(0);
@@ -360,9 +366,155 @@
       );
     }
 
-    // 渲染应用 (React 18 createRoot)
+    // --- المكون الجديد: الاختبار العكسي (تاريخ ← حدث) ---
+    function ReverseQuizView() {
+      const [questions, setQuestions] = React.useState([]);
+      const [currentQIndex, setCurrentQIndex] = React.useState(0);
+      const [score, setScore] = React.useState(0);
+      const [showResult, setShowResult] = React.useState(false);
+      const [selectedAnswer, setSelectedAnswer] = React.useState(null);
+      const [isAnswering, setIsAnswering] = React.useState(false);
+
+      const startQuiz = () => {
+        // خلط البيانات واختيار 10 عناصر عشوائية
+        const shuffledData = [...historyData].sort(() => 0.5 - Math.random());
+        const selected = shuffledData.slice(0, 10);
+        
+        const generatedQuestions = selected.map(correctItem => {
+          // اختيار ثلاثة أحداث خاطئة (غير الحدث الصحيح)
+          const wrongAnswers = historyData
+            .filter(item => item.event !== correctItem.event)
+            .sort(() => 0.5 - Math.random())
+            .slice(0, 3);
+            
+          const options = [correctItem, ...wrongAnswers].sort(() => 0.5 - Math.random());
+          
+          return {
+            questionDate: correctItem.date,          // يُعرض التاريخ
+            correctEvent: correctItem.event,
+            options: options.map(opt => opt.event)    // خيارات الأحداث
+          };
+        });
+
+        setQuestions(generatedQuestions);
+        setCurrentQIndex(0);
+        setScore(0);
+        setShowResult(false);
+        setSelectedAnswer(null);
+        setIsAnswering(false);
+      };
+
+      React.useEffect(() => {
+        startQuiz();
+      }, []);
+
+      const handleAnswer = (selectedEvent) => {
+        if (isAnswering) return;
+        
+        setIsAnswering(true);
+        setSelectedAnswer(selectedEvent);
+        
+        const isCorrect = selectedEvent === questions[currentQIndex].correctEvent;
+        if (isCorrect) {
+          setScore(prev => prev + 1);
+        }
+
+        setTimeout(() => {
+          if (currentQIndex + 1 < questions.length) {
+            setCurrentQIndex(prev => prev + 1);
+            setSelectedAnswer(null);
+            setIsAnswering(false);
+          } else {
+            setShowResult(true);
+          }
+        }, 1500);
+      };
+
+      if (questions.length === 0) return <div className="text-center text-white mt-10">جاري التحضير...</div>;
+
+      if (showResult) {
+        const percentage = (score / questions.length) * 100;
+        let message = "يحتاج إلى مراجعة أكثر";
+        let colorClass = "text-red-400";
+        if (percentage >= 80) { message = "ممتاز! أنت مستعد للبكالوريا"; colorClass = "text-emerald-400"; }
+        else if (percentage >= 50) { message = "جيد، لكنك تحتاج للمزيد من التركيز"; colorClass = "text-yellow-400"; }
+
+        return (
+          <div className="max-w-xl mx-auto bg-slate-800 rounded-3xl p-8 shadow-2xl border border-slate-700 text-center animate-in fade-in zoom-in duration-500">
+            <h2 className="text-3xl font-bold text-white mb-2">نتيجة اختبار التاريخ</h2>
+            <div className="text-7xl font-black mb-4 mt-6">
+              <span className={colorClass}>{score}</span>
+              <span className="text-slate-500 text-4xl">/{questions.length}</span>
+            </div>
+            <p className={`text-xl font-medium mb-8 ${colorClass}`}>{message}</p>
+            <button 
+              onClick={startQuiz}
+              className="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-4 rounded-xl transition-colors shadow-lg shadow-purple-900/20"
+            >
+              إعادة الاختبار
+            </button>
+          </div>
+        );
+      }
+
+      const currentQ = questions[currentQIndex];
+
+      return (
+        <div className="max-w-3xl mx-auto">
+          <div className="mb-8">
+            <div className="flex justify-between text-sm font-medium text-slate-400 mb-2">
+              <span>السؤال {currentQIndex + 1} من {questions.length}</span>
+              <span>النقاط: {score}</span>
+            </div>
+            <div className="w-full bg-slate-800 rounded-full h-2.5">
+              <div 
+                className="bg-purple-500 h-2.5 rounded-full transition-all duration-500" 
+                style={{ width: `${((currentQIndex + 1) / questions.length) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+
+          <div className="bg-slate-800 rounded-3xl p-6 md:p-10 shadow-xl border border-slate-700 mb-6">
+            <span className="text-purple-400 font-semibold text-sm mb-4 block">ما الحدث الذي وقع في هذا التاريخ؟</span>
+            <h2 className="text-2xl md:text-3xl font-bold text-white leading-relaxed">
+              {currentQ.questionDate}
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {currentQ.options.map((optionEvent, idx) => {
+              
+              let btnStyle = "bg-slate-800 border-slate-700 hover:bg-slate-700 text-slate-200 hover:border-slate-500";
+              
+              if (isAnswering) {
+                if (optionEvent === currentQ.correctEvent) {
+                  btnStyle = "bg-emerald-900/50 border-emerald-500 text-emerald-400";
+                } else if (optionEvent === selectedAnswer) {
+                  btnStyle = "bg-red-900/50 border-red-500 text-red-400";
+                } else {
+                  btnStyle = "bg-slate-800 border-slate-800 text-slate-500 opacity-50";
+                }
+              }
+
+              return (
+                <button
+                  key={idx}
+                  onClick={() => handleAnswer(optionEvent)}
+                  disabled={isAnswering}
+                  className={`p-5 rounded-2xl border-2 text-lg font-bold transition-all duration-300 text-center shadow-sm ${btnStyle}`}
+                >
+                  {optionEvent}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    // عرض التطبيق
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<App />);
   </script>
 </body>
-</html>
+</html> 
